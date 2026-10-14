@@ -715,6 +715,20 @@ fn publish_shared_generation(
     meta_lsn: u64,
 ) {
     let budget = crate::settings::hnsw_shared_serving_budget_bytes_from_guc();
+    // Admit the publish before paying for it: encoding the image and copying
+    // it into a freshly pinned DSM segment costs as much as the pack itself,
+    // and a publish that cannot be committed throws all of it away.
+    if !shared_publish_admissible(
+        database_oid,
+        index_oid,
+        rel_file_number,
+        segment_id,
+        local_graph.projected_image_bytes(),
+        budget,
+    ) {
+        record_hnsw_shared_publish(false);
+        return;
+    }
     let Ok(image_bytes) = local_graph.encode_image() else {
         return;
     };
