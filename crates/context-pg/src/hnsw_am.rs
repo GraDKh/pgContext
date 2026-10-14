@@ -272,6 +272,8 @@ const HNSW_META_MAGIC: u32 = 0x4853_4e57;
 const HNSW_META_VERSION: u16 = 13;
 pub(crate) const HNSW_MAX_SEGMENTS: usize = 16;
 const HNSW_TARGET_SEGMENT_ROWS: usize = 100_000;
+/// Entries the backend-local packed-graph cache holds before it makes room.
+pub(crate) const HNSW_PACKED_GRAPH_CACHE_CAPACITY: usize = 4;
 const HNSW_FIRST_VECTOR_BLOCK: pg_sys::BlockNumber = 1;
 const HNSW_INVALID_OFFSET: pg_sys::OffsetNumber = 0;
 const HNSW_FIRST_OFFSET: pg_sys::OffsetNumber = 1;
